@@ -57,32 +57,31 @@ const ChatAssistant = () => {
     setIsLoading(true);
 
     try {
-      const apiKey = process.env.GEMINI_API_KEY;
-      if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
-        throw new Error("Chave de API não configurada. Por favor, configure a GEMINI_API_KEY nos segredos do AI Studio.");
-      }
-
       const ai = getGenAI();
-      const model = "gemini-flash-latest";
-      const response = await ai.models.generateContent({
-        model,
-        contents: [{ role: 'user', parts: [{ text: userText }] }],
+      const chat = ai.chats.create({
+        model: "gemini-3-flash-preview",
         config: {
           systemInstruction: "Você é o Assistente Inteligente do app ÂMAGO. Seu objetivo é ajudar usuários a entenderem o método ÂMAGO de emagrecimento inteligente, focado em ajuste metabólico e microbiota intestinal. Seja profissional, encorajador e baseie-se na biologia. Não dê conselhos médicos prescritivos, mas explique os conceitos de inflamação, insulina e ecossistema intestinal conforme a copy do produto. Mantenha as respostas concisas.",
-        }
+        },
       });
 
+      const response = await chat.sendMessage({ message: userText });
       const botText = response.text || "Desculpe, tive um problema ao processar sua resposta. Pode tentar novamente?";
       setMessages(prev => [...prev, { role: 'bot', text: botText }]);
     } catch (err: any) {
-      console.error("Gemini Error:", err);
+      console.error("Gemini Error Details:", err);
       let errorMessage = "Ocorreu um erro na conexão.";
+      
+      if (err.message) {
+        errorMessage = `Erro: ${err.message}`;
+      } else if (typeof err === 'string') {
+        errorMessage = `Erro: ${err}`;
+      } else {
+        errorMessage = `Erro desconhecido: ${JSON.stringify(err)}`;
+      }
       
       if (err.message?.includes("403") || err.message?.includes("Forbidden")) {
         errorMessage = "Erro 403: Acesso negado. Verifique se sua chave de API é válida e tem permissão para este modelo.";
-      } else if (err.message?.includes("Requested entity was not found")) {
-        errorMessage = "Modelo não encontrado. Tentando reconfigurar chave...";
-        if (window.aistudio) await window.aistudio.openSelectKey();
       }
 
       setError(errorMessage);
