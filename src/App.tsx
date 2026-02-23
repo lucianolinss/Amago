@@ -57,11 +57,16 @@ const ChatAssistant = () => {
     setIsLoading(true);
 
     try {
+      const apiKey = process.env.GEMINI_API_KEY;
+      if (!apiKey || apiKey === "MY_GEMINI_API_KEY") {
+        throw new Error("Chave de API não configurada. Por favor, configure a GEMINI_API_KEY nos segredos do AI Studio.");
+      }
+
       const ai = getGenAI();
-      const model = "gemini-3-flash-preview";
+      const model = "gemini-flash-latest";
       const response = await ai.models.generateContent({
         model,
-        contents: userText,
+        contents: [{ role: 'user', parts: [{ text: userText }] }],
         config: {
           systemInstruction: "Você é o Assistente Inteligente do app ÂMAGO. Seu objetivo é ajudar usuários a entenderem o método ÂMAGO de emagrecimento inteligente, focado em ajuste metabólico e microbiota intestinal. Seja profissional, encorajador e baseie-se na biologia. Não dê conselhos médicos prescritivos, mas explique os conceitos de inflamação, insulina e ecossistema intestinal conforme a copy do produto. Mantenha as respostas concisas.",
         }
