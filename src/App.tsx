@@ -58,30 +58,31 @@ const ChatAssistant = () => {
 
     try {
       const ai = getGenAI();
-      const chat = ai.chats.create({
-        model: "gemini-3-flash-preview",
+      const model = "gemini-3-flash-preview";
+      const response = await ai.models.generateContent({
+        model,
+        contents: userText,
         config: {
           systemInstruction: "Você é o Assistente Inteligente do app ÂMAGO. Seu objetivo é ajudar usuários a entenderem o método ÂMAGO de emagrecimento inteligente, focado em ajuste metabólico e microbiota intestinal. Seja profissional, encorajador e baseie-se na biologia. Não dê conselhos médicos prescritivos, mas explique os conceitos de inflamação, insulina e ecossistema intestinal conforme a copy do produto. Mantenha as respostas concisas.",
-        },
+        }
       });
 
-      const response = await chat.sendMessage({ message: userText });
       const botText = response.text || "Desculpe, tive um problema ao processar sua resposta. Pode tentar novamente?";
       setMessages(prev => [...prev, { role: 'bot', text: botText }]);
     } catch (err: any) {
       console.error("Gemini Error Details:", err);
-      let errorMessage = "Ocorreu um erro na conexão.";
+      let errorMessage = "Ocorreu um erro na conexão com a inteligência artificial.";
       
       if (err.message) {
-        errorMessage = `Erro: ${err.message}`;
-      } else if (typeof err === 'string') {
-        errorMessage = `Erro: ${err}`;
+        errorMessage = `Erro da API: ${err.message}`;
       } else {
         errorMessage = `Erro desconhecido: ${JSON.stringify(err)}`;
       }
       
       if (err.message?.includes("403") || err.message?.includes("Forbidden")) {
-        errorMessage = "Erro 403: Acesso negado. Verifique se sua chave de API é válida e tem permissão para este modelo.";
+        errorMessage = "Erro de Autenticação (403). Verifique se a chave de API está configurada corretamente nos segredos do AI Studio.";
+      } else if (err.message?.includes("API_KEY_INVALID")) {
+        errorMessage = "Chave de API inválida. Por favor, verifique suas configurações.";
       }
 
       setError(errorMessage);
