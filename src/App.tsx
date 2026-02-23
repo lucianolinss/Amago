@@ -167,9 +167,14 @@ const ChatAssistant = () => {
 const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-zinc-950/80 backdrop-blur-md border-b border-white/5">
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="text-xl font-extrabold tracking-tighter text-white">
-          ÂMAGO
+      <div className="max-w-7xl mx-auto px-6 h-[160px] md:h-[200px] flex items-center justify-between">
+        <div className="flex items-center">
+          <img 
+            src="https://lh3.googleusercontent.com/d/1mwaDmMGhKk6FuvH9jYD11VOaX1AWy7YH" 
+            alt="ÂMAGO Logo" 
+            className="h-[120px] md:h-[160px] w-auto"
+            referrerPolicy="no-referrer"
+          />
         </div>
         <a 
           href="#checkout" 
@@ -184,7 +189,7 @@ const Navbar = () => {
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center bg-zinc-950 text-white pt-20 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col justify-center bg-zinc-950 text-white pt-[160px] md:pt-[200px] overflow-hidden">
       {/* Background elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
         <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-emerald-500 rounded-full blur-[120px]" />
@@ -548,7 +553,14 @@ const Footer = () => {
   return (
     <footer className="py-12 px-6 bg-zinc-950 text-zinc-500 text-center border-t border-white/5">
       <div className="max-w-7xl mx-auto space-y-6">
-        <div className="text-2xl font-black tracking-tighter text-white">ÂMAGO</div>
+        <div className="flex justify-center">
+          <img 
+            src="https://lh3.googleusercontent.com/d/1mwaDmMGhKk6FuvH9jYD11VOaX1AWy7YH" 
+            alt="ÂMAGO Logo" 
+            className="h-[160px] md:h-[200px] w-auto"
+            referrerPolicy="no-referrer"
+          />
+        </div>
         <p className="text-xs max-w-2xl mx-auto leading-relaxed">
           Este produto não substitui o parecer médico profissional. Sempre consulte seu médico para tratar de assuntos relativos à saúde. Os resultados podem variar de pessoa para pessoa.
         </p>
